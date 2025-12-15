@@ -141,14 +141,7 @@ section.active { display: block; animation: fadeIn 0.4s; }
 /* --- CUPONES --- */
 .coupon-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
 .coupon-card { 
-    background-image: url('https://ibb.co/KcfMh5QZ'); 
-    background-size: cover;    /* Ajusta la imagen al tamaño */
-    background-position: center; 
-    
-    /* Para que el texto se lea bien sobre la imagen */
-    color: white; 
-    text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
-    position: relative; /* Necesario para que se vea bien */
+    background: linear-gradient(135deg, var(--primary), #ffb74d); 
     color: white; 
     padding: 15px 25px; 
     border-radius: 15px; 
@@ -233,3 +226,4 @@ footer {
 .btn-whatsapp { background: #25D366; color: white; border: none; padding: 14px; width: 100%; border-radius: 50px; margin-bottom: 10px; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
 .btn-stripe { background: #635bff; color: white; border: none; padding: 14px; width: 100%; border-radius: 50px; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
