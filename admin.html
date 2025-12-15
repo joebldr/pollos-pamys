@@ -71,7 +71,7 @@
     </div>
 
     <script>
-        const API = 'http://localhost:3000/api';
+        const API = '/api';
 
         document.addEventListener('DOMContentLoaded', () => {
             cargarProductos();
@@ -129,4 +129,5 @@
         async function borrarC(id) { if(confirm('¿Borrar?')) { await fetch(API + `/coupons/${id}`, { method: 'DELETE' }); cargarCupones(); } }
     </script>
 </body>
+
 </html>
