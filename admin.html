@@ -75,38 +75,29 @@
         </div>
     </div>
 
-    <script>
+   <script>
         const API = '/api';
 
-        // 1. PROTECCIÓN: Si no es admin, lo saca de la página
-        // Esto evita que alguien entre escribiendo la URL directamente
-        if (localStorage.getItem('role') !== 'admin') {
+        // 1. SEGURIDAD: Verificar si es admin al entrar
+        const rolUsuario = localStorage.getItem('role');
+        if (rolUsuario !== 'admin') {
             window.location.href = 'login.html';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarProductos();
-            cargarCupones();
-        });
-
-        // 2. FUNCIÓN PARA CERRAR SESIÓN
+        // 2. FUNCIÓN DE SALIR (Debe estar aquí, en la raíz del script)
         function cerrarSesion() {
-            if(confirm("¿Estás seguro que deseas salir?")) {
-                // Borramos el rol del almacenamiento local
-                localStorage.removeItem('role');
-                // Redirigimos al login
-                window.location.href = 'login.html';
+            if(confirm("¿Seguro que deseas cerrar sesión?")) {
+                localStorage.removeItem('role'); // Borra el permiso
+                window.location.href = 'login.html'; // Manda al login
             }
         }
 
-        // ... (El resto de tu código: cargarProductos, guardarProducto, etc.) ...
-
         document.addEventListener('DOMContentLoaded', () => {
             cargarProductos();
             cargarCupones();
         });
 
-        // PRODUCTOS
+        // --- TUS OTRAS FUNCIONES (PRODUCTOS) ---
         async function cargarProductos() {
             const res = await fetch(API + '/products');
             const data = await res.json();
@@ -116,6 +107,7 @@
                 div.innerHTML += `<div class="item-row"><div><b>${p.nombre}</b> ($${p.precio})</div><button class="btn-delete" onclick="borrarP('${p._id}')"><i class="fas fa-trash"></i></button></div>`;
             });
         }
+
         async function guardarProducto() {
             const data = {
                 nombre: document.getElementById('p-name').value,
@@ -127,12 +119,19 @@
             if(!data.nombre) return alert("Falta nombre");
             await fetch(API + '/products', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
             cargarProductos();
+            // Limpiar campos
             document.getElementById('p-name').value = '';
             document.getElementById('p-price').value = '';
         }
-        async function borrarP(id) { if(confirm('¿Borrar?')) { await fetch(API + `/products/${id}`, { method: 'DELETE' }); cargarProductos(); } }
 
-        // CUPONES
+        async function borrarP(id) { 
+            if(confirm('¿Borrar producto?')) { 
+                await fetch(API + `/products/${id}`, { method: 'DELETE' }); 
+                cargarProductos(); 
+            } 
+        }
+
+        // --- TUS OTRAS FUNCIONES (CUPONES) ---
         async function cargarCupones() {
             const res = await fetch(API + '/coupons');
             const data = await res.json();
@@ -143,6 +142,7 @@
                 div.innerHTML += `<div class="item-row"><div><span class="coupon-tag">${c.codigo}</span> -${desc}</div><button class="btn-delete" onclick="borrarC('${c._id}')"><i class="fas fa-trash"></i></button></div>`;
             });
         }
+
         async function guardarCupon() {
             const data = {
                 codigo: document.getElementById('c-code').value.toUpperCase(),
@@ -154,10 +154,17 @@
             cargarCupones();
             document.getElementById('c-code').value = '';
         }
-        async function borrarC(id) { if(confirm('¿Borrar?')) { await fetch(API + `/coupons/${id}`, { method: 'DELETE' }); cargarCupones(); } }
+
+        async function borrarC(id) { 
+            if(confirm('¿Borrar cupón?')) { 
+                await fetch(API + `/coupons/${id}`, { method: 'DELETE' }); 
+                cargarCupones(); 
+            } 
+        }
     </script>
 </body>
 
 </html>
+
 
 
