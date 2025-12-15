@@ -50,21 +50,33 @@
     <div class="panel-section">
         <h2 class="section-title">Gestión de Cupones</h2>
         <div class="panel-grid">
-            <div class="panel-box box-form">
-                <h3>Nuevo Cupón</h3>
-                <input id="c-code" class="form-input" placeholder="CÓDIGO (Ej: PAMY10)" style="text-transform:uppercase;">
-                <input id="c-val" type="number" class="form-input" placeholder="Valor">
-                <select id="c-type" class="form-input">
-                    <option value="porcentaje">% Porcentaje</option>
-                    <option value="fijo">$ Fijo</option>
-                </select>
-                <button class="btn-add" onclick="guardarCupon()" style="width:100%; background: rebeccapurple;">Guardar Cupón</button>
-            </div>
-            <div class="panel-box box-list">
-                <h3>Cupones Activos</h3>
-                <div id="lista-cupones">Cargando...</div>
-            </div>
+    
+    <div class="panel-box box-form">
+        <h3 id="form-title" class="section-title">Nuevo Producto</h3>
+        
+        <input id="p-name" class="form-input" placeholder="Nombre">
+        <input id="p-price" type="number" class="form-input" placeholder="Precio">
+        <select id="p-cat" class="form-input">
+            <option value="menu">Menú</option>
+            <option value="promocion">Promoción</option>
+        </select>
+        <textarea id="p-desc" class="form-input" rows="2" placeholder="Descripción"></textarea>
+        <input id="p-img" class="form-input" placeholder="URL Imagen">
+
+        <div style="display: flex; gap: 10px;">
+            <button id="btn-save" class="btn-add" onclick="guardarProducto()" style="flex: 1;">Guardar</button>
+            <button id="btn-cancel" onclick="cancelarEdicion()" style="background: #777; color: white; border:none; border-radius:4px; padding: 0 15px; display: none;">Cancelar</button>
         </div>
+    </div>
+
+    <div class="panel-box box-list">
+        <h3 class="section-title">Inventario Actual</h3>
+        <div id="lista-productos">
+            <p style="color:#777">Cargando productos...</p>
+        </div>
+    </div>
+
+</div>
     </div>
 
     <script>
@@ -172,5 +184,6 @@
 </body>
 
 </html>
+
 
 
