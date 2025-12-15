@@ -78,6 +78,29 @@
     <script>
         const API = '/api';
 
+        // 1. PROTECCIÓN: Si no es admin, lo saca de la página
+        // Esto evita que alguien entre escribiendo la URL directamente
+        if (localStorage.getItem('role') !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarProductos();
+            cargarCupones();
+        });
+
+        // 2. FUNCIÓN PARA CERRAR SESIÓN
+        function cerrarSesion() {
+            if(confirm("¿Estás seguro que deseas salir?")) {
+                // Borramos el rol del almacenamiento local
+                localStorage.removeItem('role');
+                // Redirigimos al login
+                window.location.href = 'login.html';
+            }
+        }
+
+        // ... (El resto de tu código: cargarProductos, guardarProducto, etc.) ...
+
         document.addEventListener('DOMContentLoaded', () => {
             cargarProductos();
             cargarCupones();
@@ -136,4 +159,5 @@
 </body>
 
 </html>
+
 
