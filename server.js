@@ -41,28 +41,4 @@ app.get('/api/coupons/validate/:codigo', async (req, res) => {
     else res.status(404).json({ error: "No existe" });
 });
 
-// Ejemplo de ruta en Backend (Node/Express/Mongoose)
-router.put('/products/:id', async (req, res) => {
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(updatedProduct);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 app.listen(PORT, () => console.log(`🚀 Servidor listo en http://localhost:${PORT}`));
-
-// server.js
-
-// ... (tus rutas actuales de productos) ...
-app.get('/api/products', async (req, res) => res.json(await Product.find()));
-app.post('/api/products', async (req, res) => { await new Product(req.body).save(); res.json({msg:"OK"}); });
-
-// --- AGREGA ESTA LÍNEA AQUÍ PARA QUE FUNCIONE EL BOTÓN EDITAR ---
-app.put('/api/products/:id', async (req, res) => { 
-    await Product.findByIdAndUpdate(req.params.id, req.body); 
-    res.json({msg:"Actualizado"}); 
-});
-// -----------------------------------------------------------------
-
-app.delete('/api/products/:id', async (req, res) => { await Product.findByIdAndDelete(req.params.id); res.json({msg:"OK"}); });
