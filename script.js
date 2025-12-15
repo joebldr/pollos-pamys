@@ -146,3 +146,32 @@ function enviarPedido(metodo, datos, cb) {
     }).then(() => cb && cb()).catch(e => cb && cb());
 
 }
+// Boton de menu
+
+function showSection(sectionId) {
+    // 1. Ocultar todas las secciones principales
+    const sections = ['inicio', 'menu'];
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = 'none';
+            el.classList.remove('active');
+        }
+    });
+
+    // 2. Mostrar la sección seleccionada
+    const target = document.getElementById(sectionId);
+    if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+        
+        // Fix visual: Asegurar que el scroll suba al inicio al cambiar de pestaña
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Inicialización extra para asegurar que 'inicio' se vea al cargar
+document.addEventListener('DOMContentLoaded', () => {
+    // Asegurarse de que el CSS no esté ocultando todo por defecto
+    showSection('inicio');
+});
