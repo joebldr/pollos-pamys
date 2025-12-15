@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pollería Pamy's</title>
+    <link href="https://fonts.googleapis.com/css2?family=Epunda+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="header-logo">
+        <img id="logo-principal-pamys" src="assets/logo.png" alt="Pamys Logo">
+        <nav>
+            <button onclick="showSection('inicio')"><i class="fas fa-home"></i> Inicio</button>
+            <button onclick="showSection('menu')"><i class="fas fa-drumstick-bite"></i> Menú</button>
+            
+            <button id="btn-admin" onclick="window.location.href='admin.html'" style="display: none; background: rgba(0,0,0,0.3);">
+                <i class="fas fa-tools"></i> Admin
+            </button>
+
+            <button onclick="window.location.href='login.html'"><i class="fas fa-user"></i> Mi Cuenta</button>
+            
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <section id="inicio" class="active">
+        <div class="hero" style="background-image: url('assets/pollo.jpg');">
+            <div class="hero-overlay">
+                <h1>¡El mejor pollo de la ciudad!</h1>
+                <p>Crujiente, jugoso y al mejor precio.</p>
+                <button onclick="document.getElementById('seccion-promos-titulo').scrollIntoView({behavior: 'smooth'})" class="btn-cta">
+                    Ver Promociones <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin: 30px 20px;">
+            <h3><i class="fas fa-ticket-alt"></i> Cupones Disponibles</h3>
+            <p style="font-size:1rem; color:#666; padding: 1rem;">Toca cualquier cupón para copiarlo al portapapeles</p>
+            <div class="coupon-container"></div>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #eee; margin:40px 0;">
+
+        <h2 id="seccion-promos-titulo" style="text-align:center; margin:10px 0; color:var(--primary);">
+            🔥 Promociones Especiales 🔥
+        </h2>
+        <p id="promos-disclaimer"> Precios de los paquetes válidos hasta el 31 de Diciembre de 2025</p>
+        <div id="promos-container"></div>
+        
+    </section>
+
+    <section id="menu">
+        <h2 style="text-align:center; margin:20px 0;">Menú Completo</h2>
+        <div id="menu-container" class="products-grid"></div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pollería Pamy's</h3>
+                <p>© 2025 - Durango, Dgo.</p>
+                <p>¡El sabor que te hace volver!</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📍 <a href="https://maps.app.goo.gl/eRwmLj6TrD9FQek2A" target="_blank">Ver Dirección en Mapa</a></p>
+                <p>📞 618 836 1213</p>
+            </div>
+            <div class="footer-section">
+                <h4>Horario</h4>
+                <p>🕒 9:30 a.m. – 6:30 p.m.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Tu Pedido</h3>
+            <span class="close-cart" onclick="toggleCart()">×</span>
+        </div>
+        
+        <div id="cart-items" class="cart-items"></div>
+
+        <div class="cart-footer">
+            <div class="total">Total: <span id="cart-total-price">$0.00</span></div>
+            
+            <input type="text" id="cliente-nombre" placeholder="Tu Nombre" class="form-input">
+            <input type="tel" id="cliente-tel" placeholder="Teléfono" class="form-input">
+            <textarea id="cliente-dir" placeholder="Dirección de entrega" class="form-input"></textarea>
+            
+            <div style="display:flex; gap:5px; margin-bottom:10px;">
+                <input type="text" id="coupon-input" placeholder="CÓDIGO" class="form-input" style="margin:0;">
+                <button class="btn-add" onclick="aplicarCupon()" style="width:auto;"><i class="fas fa-check"></i></button>
+            </div>
+
+            <button class="btn-whatsapp" onclick="realizarPedidoWhatsApp()">
+                <i class="fab fa-whatsapp"></i> Pedir por WhatsApp
+            </button>
+            
+            <button class="btn-stripe" onclick="pagarStripe()">
+                <i class="fab fa-stripe-s"></i> Pagar con Tarjeta
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

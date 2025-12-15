@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Pamy's</title>
+    <link href="https://fonts.googleapis.com/css2?family=Epunda+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .panel-section { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .section-title { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        .panel-grid { display: flex; gap: 20px; flex-wrap: wrap; }
+        .panel-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .box-form { flex: 1; min-width: 300px; }
+        .box-list { flex: 2; min-width: 300px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .btn-delete { color: red; cursor: pointer; background: none; border: none; }
+        .coupon-tag { background: #fff3e0; color: #e65100; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header class="header-logo">
+        <div class="brand" style="color:white; font-size:1.5rem;">Admin Pamy's</div>
+        <nav>
+            <button onclick="window.location.href='index.html'">Ver Tienda</button>
+        </nav>
+    </header>
+
+    <div class="panel-section">
+        <h2 class="section-title">Gestión de Productos</h2>
+        <div class="panel-grid">
+            <div class="panel-box box-form">
+                <h3>Nuevo Producto</h3>
+                <input id="p-name" class="form-input" placeholder="Nombre">
+                <input id="p-price" type="number" class="form-input" placeholder="Precio">
+                <select id="p-cat" class="form-input">
+                    <option value="menu">Menú</option>
+                    <option value="promocion">Promoción</option>
+                </select>
+                <textarea id="p-desc" class="form-input" rows="2" placeholder="Descripción"></textarea>
+                <input id="p-img" class="form-input" placeholder="URL Imagen">
+                <button class="btn-add" onclick="guardarProducto()" style="width:100%">Guardar</button>
+            </div>
+            <div class="panel-box box-list">
+                <h3>Inventario</h3>
+                <div id="lista-productos">Cargando...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-section">
+        <h2 class="section-title">Gestión de Cupones</h2>
+        <div class="panel-grid">
+            <div class="panel-box box-form">
+                <h3>Nuevo Cupón</h3>
+                <input id="c-code" class="form-input" placeholder="CÓDIGO (Ej: PAMY10)" style="text-transform:uppercase;">
+                <input id="c-val" type="number" class="form-input" placeholder="Valor">
+                <select id="c-type" class="form-input">
+                    <option value="porcentaje">% Porcentaje</option>
+                    <option value="fijo">$ Fijo</option>
+                </select>
+                <button class="btn-add" onclick="guardarCupon()" style="width:100%; background: rebeccapurple;">Guardar Cupón</button>
+            </div>
+            <div class="panel-box box-list">
+                <h3>Cupones Activos</h3>
+                <div id="lista-cupones">Cargando...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3000/api';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarProductos();
+            cargarCupones();
+        });
+
+        // PRODUCTOS
+        async function cargarProductos() {
+            const res = await fetch(API + '/products');
+            const data = await res.json();
+            const div = document.getElementById('lista-productos');
+            div.innerHTML = '';
+            data.forEach(p => {
+                div.innerHTML += `<div class="item-row"><div><b>${p.nombre}</b> ($${p.precio})</div><button class="btn-delete" onclick="borrarP('${p._id}')"><i class="fas fa-trash"></i></button></div>`;
+            });
+        }
+        async function guardarProducto() {
+            const data = {
+                nombre: document.getElementById('p-name').value,
+                precio: document.getElementById('p-price').value,
+                categoria: document.getElementById('p-cat').value,
+                desc: document.getElementById('p-desc').value,
+                img: document.getElementById('p-img').value
+            };
+            if(!data.nombre) return alert("Falta nombre");
+            await fetch(API + '/products', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+            cargarProductos();
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+        }
+        async function borrarP(id) { if(confirm('¿Borrar?')) { await fetch(API + `/products/${id}`, { method: 'DELETE' }); cargarProductos(); } }
+
+        // CUPONES
+        async function cargarCupones() {
+            const res = await fetch(API + '/coupons');
+            const data = await res.json();
+            const div = document.getElementById('lista-cupones');
+            div.innerHTML = '';
+            data.forEach(c => {
+                const desc = c.tipo === 'porcentaje' ? c.descuento + '%' : '$' + c.descuento;
+                div.innerHTML += `<div class="item-row"><div><span class="coupon-tag">${c.codigo}</span> -${desc}</div><button class="btn-delete" onclick="borrarC('${c._id}')"><i class="fas fa-trash"></i></button></div>`;
+            });
+        }
+        async function guardarCupon() {
+            const data = {
+                codigo: document.getElementById('c-code').value.toUpperCase(),
+                descuento: document.getElementById('c-val').value,
+                tipo: document.getElementById('c-type').value
+            };
+            if(!data.codigo) return alert("Falta código");
+            await fetch(API + '/coupons', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+            cargarCupones();
+            document.getElementById('c-code').value = '';
+        }
+        async function borrarC(id) { if(confirm('¿Borrar?')) { await fetch(API + `/coupons/${id}`, { method: 'DELETE' }); cargarCupones(); } }
+    </script>
+</body>
+</html>
