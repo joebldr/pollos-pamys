@@ -41,4 +41,13 @@ app.get('/api/coupons/validate/:codigo', async (req, res) => {
     else res.status(404).json({ error: "No existe" });
 });
 
+// Ejemplo de ruta en Backend (Node/Express/Mongoose)
+router.put('/products/:id', async (req, res) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updatedProduct);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 app.listen(PORT, () => console.log(`🚀 Servidor listo en http://localhost:${PORT}`));
