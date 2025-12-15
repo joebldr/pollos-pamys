@@ -22,33 +22,30 @@
 <body>
 
     <header class="header-logo">
-        <div class="brand" style="color:white; font-size:1.5rem;">Admin Pamy's</div>
-        <nav>
-            <button onclick="window.location.href='index.html'">Ver Tienda</button>
-        </nav>
-    </header>
+    <div class="brand" style="color:white; font-size:1.5rem;">Admin Pamy's</div>
+    <nav>
+        <button onclick="window.location.href='index.html'">Ver Tienda</button>
+        <button onclick="cerrarSesion()" style="background: #d32f2f; margin-left: 10px;">
+            <i class="fas fa-sign-out-alt"></i> Salir
+        </button>
+    </nav>
+</header>
 
-    <div class="panel-section">
-        <h2 class="section-title">Gestión de Productos</h2>
-        <div class="panel-grid">
-            <div class="panel-box box-form">
-                <h3>Nuevo Producto</h3>
-                <input id="p-name" class="form-input" placeholder="Nombre">
-                <input id="p-price" type="number" class="form-input" placeholder="Precio">
-                <select id="p-cat" class="form-input">
-                    <option value="menu">Menú</option>
-                    <option value="promocion">Promoción</option>
-                </select>
-                <textarea id="p-desc" class="form-input" rows="2" placeholder="Descripción"></textarea>
-                <input id="p-img" class="form-input" placeholder="URL Imagen">
-                <button class="btn-add" onclick="guardarProducto()" style="width:100%">Guardar</button>
-            </div>
-            <div class="panel-box box-list">
-                <h3>Inventario</h3>
-                <div id="lista-productos">Cargando...</div>
-            </div>
-        </div>
+<div class="panel-box box-form">
+    <h3 id="form-title">Nuevo Producto</h3> <input id="p-name" class="form-input" placeholder="Nombre">
+    <input id="p-price" type="number" class="form-input" placeholder="Precio">
+    <select id="p-cat" class="form-input">
+        <option value="menu">Menú</option>
+        <option value="promocion">Promoción</option>
+    </select>
+    <textarea id="p-desc" class="form-input" rows="2" placeholder="Descripción"></textarea>
+    <input id="p-img" class="form-input" placeholder="URL Imagen">
+    
+    <div style="display: flex; gap: 10px;">
+        <button id="btn-save" class="btn-add" onclick="guardarProducto()" style="flex: 1;">Guardar</button>
+        <button id="btn-cancel" onclick="cancelarEdicion()" style="background: #777; color: white; border:none; border-radius:4px; display: none;">Cancelar</button>
     </div>
+</div>
 
     <div class="panel-section">
         <h2 class="section-title">Gestión de Cupones</h2>
@@ -131,3 +128,4 @@
 </body>
 
 </html>
+
