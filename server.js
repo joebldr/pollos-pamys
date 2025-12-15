@@ -51,3 +51,18 @@ router.put('/products/:id', async (req, res) => {
     }
 });
 app.listen(PORT, () => console.log(`🚀 Servidor listo en http://localhost:${PORT}`));
+
+// server.js
+
+// ... (tus rutas actuales de productos) ...
+app.get('/api/products', async (req, res) => res.json(await Product.find()));
+app.post('/api/products', async (req, res) => { await new Product(req.body).save(); res.json({msg:"OK"}); });
+
+// --- AGREGA ESTA LÍNEA AQUÍ PARA QUE FUNCIONE EL BOTÓN EDITAR ---
+app.put('/api/products/:id', async (req, res) => { 
+    await Product.findByIdAndUpdate(req.params.id, req.body); 
+    res.json({msg:"Actualizado"}); 
+});
+// -----------------------------------------------------------------
+
+app.delete('/api/products/:id', async (req, res) => { await Product.findByIdAndDelete(req.params.id); res.json({msg:"OK"}); });
