@@ -68,64 +68,109 @@
     </div>
 
     <script>
-        const API = '/api';
+       // VARIABLES GLOBALES
+    let inventarioActual = []; 
+    let idEnEdicion = null; // Si es null, estamos creando. Si tiene ID, estamos editando.
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarProductos();
-            cargarCupones();
+    // PRODUCTOS
+    async function cargarProductos() {
+        const res = await fetch(API + '/products');
+        inventarioActual = await res.json(); // Guardamos en memoria
+        
+        const div = document.getElementById('lista-productos');
+        div.innerHTML = '';
+        
+        inventarioActual.forEach(p => {
+            // Agregamos botón de Lápiz (Editar)
+            div.innerHTML += `
+            <div class="item-row">
+                <div><b>${p.nombre}</b> ($${p.precio})</div>
+                <div>
+                    <button class="btn-delete" style="color:var(--primary); margin-right:10px;" onclick="prepararEdicion('${p._id}')">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button class="btn-delete" onclick="borrarP('${p._id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>`;
         });
+    }
 
-        // PRODUCTOS
-        async function cargarProductos() {
-            const res = await fetch(API + '/products');
-            const data = await res.json();
-            const div = document.getElementById('lista-productos');
-            div.innerHTML = '';
-            data.forEach(p => {
-                div.innerHTML += `<div class="item-row"><div><b>${p.nombre}</b> ($${p.precio})</div><button class="btn-delete" onclick="borrarP('${p._id}')"><i class="fas fa-trash"></i></button></div>`;
+    function prepararEdicion(id) {
+        const producto = inventarioActual.find(p => p._id === id);
+        if(!producto) return;
+
+        // Rellenar formulario
+        document.getElementById('p-name').value = producto.nombre;
+        document.getElementById('p-price').value = producto.precio;
+        document.getElementById('p-cat').value = producto.categoria;
+        document.getElementById('p-desc').value = producto.desc;
+        document.getElementById('p-img').value = producto.img;
+
+        // Cambiar estado visual
+        idEnEdicion = id;
+        document.getElementById('form-title').innerText = "Editando Producto";
+        document.getElementById('btn-save').innerText = "Actualizar";
+        document.getElementById('btn-save').style.background = "#ff9800"; // Naranja para editar
+        document.getElementById('btn-cancel').style.display = "block";
+    }
+
+    function cancelarEdicion() {
+        idEnEdicion = null;
+        document.getElementById('p-name').value = '';
+        document.getElementById('p-price').value = '';
+        document.getElementById('p-desc').value = '';
+        document.getElementById('p-img').value = '';
+        
+        document.getElementById('form-title').innerText = "Nuevo Producto";
+        document.getElementById('btn-save').innerText = "Guardar";
+        document.getElementById('btn-save').style.background = ""; // Color original
+        document.getElementById('btn-cancel').style.display = "none";
+    }
+
+    async function guardarProducto() {
+        const data = {
+            nombre: document.getElementById('p-name').value,
+            precio: document.getElementById('p-price').value,
+            categoria: document.getElementById('p-cat').value,
+            desc: document.getElementById('p-desc').value,
+            img: document.getElementById('p-img').value
+        };
+        if(!data.nombre) return alert("Falta nombre");
+
+        if (idEnEdicion) {
+            // MODO EDICIÓN (PUT)
+            await fetch(API + `/products/${idEnEdicion}`, { 
+                method: 'PUT', 
+                headers:{'Content-Type':'application/json'}, 
+                body: JSON.stringify(data)
+            });
+            alert("Producto actualizado");
+        } else {
+            // MODO CREACIÓN (POST)
+            await fetch(API + '/products', { 
+                method: 'POST', 
+                headers:{'Content-Type':'application/json'}, 
+                body: JSON.stringify(data)
             });
         }
-        async function guardarProducto() {
-            const data = {
-                nombre: document.getElementById('p-name').value,
-                precio: document.getElementById('p-price').value,
-                categoria: document.getElementById('p-cat').value,
-                desc: document.getElementById('p-desc').value,
-                img: document.getElementById('p-img').value
-            };
-            if(!data.nombre) return alert("Falta nombre");
-            await fetch(API + '/products', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
-            cargarProductos();
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-        }
-        async function borrarP(id) { if(confirm('¿Borrar?')) { await fetch(API + `/products/${id}`, { method: 'DELETE' }); cargarProductos(); } }
 
-        // CUPONES
-        async function cargarCupones() {
-            const res = await fetch(API + '/coupons');
-            const data = await res.json();
-            const div = document.getElementById('lista-cupones');
-            div.innerHTML = '';
-            data.forEach(c => {
-                const desc = c.tipo === 'porcentaje' ? c.descuento + '%' : '$' + c.descuento;
-                div.innerHTML += `<div class="item-row"><div><span class="coupon-tag">${c.codigo}</span> -${desc}</div><button class="btn-delete" onclick="borrarC('${c._id}')"><i class="fas fa-trash"></i></button></div>`;
-            });
+        cancelarEdicion(); // Limpia y resetea botones
+        cargarProductos(); // Recarga la lista
+    }
+
+    // LOGOUT
+    function cerrarSesion() {
+        if(confirm("¿Cerrar sesión?")) {
+            localStorage.removeItem('role'); // Borramos credenciales
+            localStorage.removeItem('token'); 
+            window.location.href = 'index.html'; // Redirige al inicio
         }
-        async function guardarCupon() {
-            const data = {
-                codigo: document.getElementById('c-code').value.toUpperCase(),
-                descuento: document.getElementById('c-val').value,
-                tipo: document.getElementById('c-type').value
-            };
-            if(!data.codigo) return alert("Falta código");
-            await fetch(API + '/coupons', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
-            cargarCupones();
-            document.getElementById('c-code').value = '';
-        }
-        async function borrarC(id) { if(confirm('¿Borrar?')) { await fetch(API + `/coupons/${id}`, { method: 'DELETE' }); cargarCupones(); } }
+    }
     </script>
 </body>
 
 </html>
+
 
