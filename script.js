@@ -2,7 +2,7 @@
    SCRIPT.JS - CONECTADO Y FUNCIONAL
    ========================================= */
 
-const API_URL = 'http://localhost:3000/api'; 
+const API_URL = '/api'; 
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbym_A90tIE6Cu7f4U1oGO3Q79mqFvhjV9TBEpHdnERNxbNLDEyXHmtdK9jPFQoh5gcU/exec'; 
 const STRIPE_LINK_BASE = 'https://buy.stripe.com/test_dRmeVf8Pi3RHdXhgSO2Ji00'; 
 
@@ -144,4 +144,5 @@ function enviarPedido(metodo, datos, cb) {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre: datos.nombre, telefono: datos.tel, direccion: datos.dir, pedido: items, total: total + " - " + metodo })
     }).then(() => cb && cb()).catch(e => cb && cb());
+
 }
